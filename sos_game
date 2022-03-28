@@ -1,0 +1,206 @@
+import pygame , sys
+import numpy as np
+pygame.init()
+# important variables
+actual_height = 660
+width = 600
+height = 600
+row = 3
+colum = 3
+radias = 60
+circle_width = 15
+screen = pygame.display.set_mode((width, actual_height))
+icon = pygame.image.load("tic-tac-toe.png")
+pygame.display.set_icon(icon)
+pygame.display.set_caption("tic tac toe")
+black = (255, 16, 3)
+border_wigth = 15
+border_height = 15
+board = np.zeros( (row, colum))
+player =1
+o_img = pygame.image.load("o.png")
+x_img = pygame.image.load("x.png")
+img_width = 120
+img_height = 120
+resized_o_img = pygame.transform.scale(o_img,(img_width, img_height))
+resized_x_img = pygame.transform.scale(x_img,(img_width, img_height))
+
+
+
+
+
+# marking x_or_o:
+def mark_sqare(row, colum ,player):
+    board [row] [colum] = player
+
+
+def avilable_sqare (row,colum):
+    if board [row][colum] == 0:
+        return True
+    else :
+        return  False
+
+def is_board_full():
+    for row in range (3):
+        for colum in range(3):
+            if avilable_sqare(row, colum) :
+                return False
+    return True
+
+def draw_os(roww, columm):
+    screen.blit(resized_o_img,((columm*200+40,roww*200+100 )))
+def drwa_xs(rowww,colll):
+    screen.blit(resized_x_img, ((colll * 200 + 40, rowww * 200 + 100)))
+
+#winning cases
+def check_winner(player):
+    if (board [0][0] == 1 and  board [0][1] == 1 and board [0] [2] == 1):
+        pygame.draw.rect(screen, (0, 0, 0), [0, 156, width,border_height])
+        return True
+    if (board [0][1] == 1 and  board [1][1] == 1 and board [2] [1] == 1) :
+        pygame.draw.rect(screen, (0, 0, 0), [295, 60, border_wigth, height])
+        return True
+    if (board [1][0] == 1 and  board [1][1] == 1 and board [1] [2] == 1) :
+        pygame.draw.rect(screen, (0, 0, 0), [0, 356, width,border_height])
+        return True
+    if (board[2][0] == 1 and board[2][1] == 1 and board[2][2] == 1) :
+        pygame.draw.rect(screen, (0, 0, 0), [0, 556, width,border_height])
+        return True
+    if (board [0][0] == 1 and  board [1][0] == 1 and board [2] [0] == 1) :
+        pygame.draw.rect(screen, (0, 0, 0), [95, 60, border_wigth,height])
+        return True
+    if (board [0][2] == 1 and  board [1][2] == 1 and board [2] [2] == 1) :
+        pygame.draw.rect(screen, (0, 0, 0), [495, 60, border_wigth,height])
+        return True
+    if (board[0][2] == 1 and board[1][1] == 1 and board[2][0] == 1) :
+        pygame.draw.line(screen,(0, 0, 0),(600, 60),(0, 660),15)
+        return True
+    if (board [0][0] == 1 and  board [1][1] == 1 and board [2] [2] == 1):
+        pygame.draw.line(screen, (0, 0, 0),(0,60),(600, 660), 15)
+        return True
+    if (board [0][0] == 2 and  board [0][1] == 2 and board [0] [2] == 2):
+        pygame.draw.rect(screen, (0, 0, 0), [0, 156, width,border_height])
+        return True
+    if (board [0][1] == 2 and  board [1][1] == 2 and board [2] [1] == 2) :
+        pygame.draw.rect(screen, (0, 0, 0), [295, 60, border_wigth, height])
+        return True
+    if (board [1][0] == 2 and  board [1][1] == 2 and board [1] [2] == 2) :
+        pygame.draw.rect(screen, (0, 0, 0), [0, 356, width,border_height])
+        return True
+    if (board[2][0] == 2 and board[2][1] == 2 and board[2][2] == 2) :
+        pygame.draw.rect(screen, (0, 0, 0), [0, 556, width,border_height])
+        return True
+    if (board [0][0] == 2 and  board [1][0] == 2 and board [2] [0] == 2) :
+        pygame.draw.rect(screen, (0, 0, 0), [95, 60, border_wigth,height])
+        return True
+    if (board [0][2] == 2 and  board [1][2] == 2 and board [2] [2] == 2) :
+        pygame.draw.rect(screen, (0, 0, 0), [495, 60, border_wigth,height])
+        return True
+    if (board[0][2] == 2 and board[1][1] == 2 and board[2][0] == 2) :
+        pygame.draw.line(screen,(0, 0, 0),(600, 60),(0, 660),15)
+        return True
+    if (board [0][0] == 2 and  board [1][1] == 2 and board [2] [2] == 2):
+        pygame.draw.line(screen, (0, 0, 0),(0,60),(600, 660), 15)
+        return True
+    return False
+game_counter = 0
+game_over = False
+def restart():
+    screen.fill((217, 255, 0))
+    pygame.draw.rect(screen, black, [width * (1 / 3) - border_wigth // 2, 60, border_wigth, height])
+    pygame.draw.rect(screen, black, [width * (2 / 3) - border_wigth // 2, 60, border_wigth, height])
+    pygame.draw.rect(screen, black, [0, height * (1 / 3) + 60, width, border_height])
+    pygame.draw.rect(screen, black, [0, height * (2 / 3) + 60, width, border_height])
+    pygame.draw.rect(screen, black, [0, 60, width, border_height])
+    player = 1
+    for i in range(3):
+        for x in range(3):
+            board[i][x] = 0
+    game_over =False
+    game_counter = 0
+
+#drawing stuf
+player1_font = pygame.font.SysFont("verdana",40)
+final_1font = player1_font.render("Player 1 Won !",1,(0,0,0,))
+plater2_font =pygame.font.SysFont("verdana",40)
+final_2font = plater2_font.render("Player 2 Won !",1,(0,0,0))
+plater2_font =pygame.font.SysFont("verdana",40)
+tie_font =pygame.font.SysFont("verdana",40)
+final_tie_font = tie_font.render("Draw !",1,(0,0,0))
+
+gamestate1=pygame.font.SysFont("verdana", 30)
+final_state1 = gamestate1.render("Player 1: x",1,(0,0,0))
+gamestate2=pygame.font.SysFont("verdana", 30)
+final_state2 = gamestate2.render("Player 2: 0",1,(0,0,0))
+
+def check_tie(game_counter):
+    if game_counter ==9:
+        screen.blit(final_tie_font, ((235, 15)))
+        game_over =True
+
+no_data = True
+screen.fill((217, 255, 0))
+pygame.draw.rect(screen, black,[width*(1/3)-border_wigth//2, 60, border_wigth, height])
+pygame.draw.rect(screen, black, [width *(2/3) - border_wigth // 2, 60, border_wigth, height])
+pygame.draw.rect(screen, black, [0, height*(1/3)+ 60, width, border_height])
+pygame.draw.rect(screen, black, [0, height*(2/3)+60, width, border_height])
+pygame.draw.rect(screen, black, [0, 60 ,width, border_height])
+if not check_winner(1) and not check_winner(2) and not check_tie(game_counter) and no_data:
+    screen.blit(final_state1, (5, 20))
+    screen.blit(final_state2, (422, 20))
+
+running = True
+while running :
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+            mouse_x1 = event.pos[0]
+            mouse_y1 = event.pos[1]
+        if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+            mouse_x = event.pos[0]
+            mouse_y = event.pos[1]
+            mouse_y -= 60
+            clicked_row = int(mouse_y //200)
+            clicked_col = int(mouse_x //200)
+
+            if avilable_sqare(clicked_row, clicked_col) and mouse_y1>=60:
+                if player == 1:
+                    mark_sqare(clicked_row, clicked_col, 1)
+                    draw_os(clicked_row,clicked_col)
+                    game_counter+=1
+                    if check_winner(player):
+                        game_over = True
+                        pygame.draw.rect(screen, (255, 3, 167), [0, 0, width, 60])
+                        screen.blit(final_2font, ((170, 10)))
+                        no_data = False
+                    if not check_winner(1) and not check_winner(2) and game_counter ==9:
+                        pygame.draw.rect(screen, (255, 3, 167), [0, 0, width, 60])
+                        check_tie(game_counter)
+                        no_data = False
+                    player =2
+                elif player ==2:
+                    mark_sqare(clicked_row, clicked_col, 2)
+                    drwa_xs(clicked_row, clicked_col)
+                    game_counter +=1
+                    if check_winner(player):
+                        game_over = True
+                        no_data = False
+                        pygame.draw.rect(screen,(255, 3, 167),[0,0,width,60])
+                        screen.blit(final_1font, ((170, 10)))
+                    if not check_winner(1) and not check_winner(2) and game_counter ==9:
+                        pygame.draw.rect(screen, (255, 3, 167), [0, 0, width, 60])
+                        check_tie(game_counter)
+                        no_data = False
+                    player = 1
+
+        key = pygame.key.get_pressed()
+        if key[pygame.K_SPACE]:
+            restart()
+            screen.blit(final_state1, (5, 20))
+            screen.blit(final_state2, (422, 20))
+    pygame.display.update()
+
+
+
+
